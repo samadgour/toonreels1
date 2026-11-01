@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Toonreel Club: animated movie catalogue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<script>try{var p=JSON.parse(localStorage.getItem("tc_prefs")||"{}"),r=document.documentElement;r.dataset.mode=p.mode||"auto";if(p.calm)r.dataset.calm="1"}catch(e){}</script>
+<style>
+:root{--bg:#f4f6fb;--fg:#1c2140;--muted:#5d6486;--card:#fff;--line:#e1e6f3;--accent:#5b4bdb;--on:#fff;--star:#a86a00;--sh:0 1px 2px rgba(28,33,64,.06),0 10px 28px -14px rgba(28,33,64,.22);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-mode=light]){--bg:#0f1226;--fg:#eceeff;--muted:#a3a9d4;--card:#181c3a;--line:#2a2f5a;--accent:#8f82ff;--on:#0f1226;--star:#ffc34d;--sh:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.6);color-scheme:dark}}
+:root[data-mode=dark]{--bg:#0f1226;--fg:#eceeff;--muted:#a3a9d4;--card:#181c3a;--line:#2a2f5a;--accent:#8f82ff;--on:#0f1226;--star:#ffc34d;--sh:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.6);color-scheme:dark}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font:500 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+button,input{font:inherit;color:inherit;cursor:pointer}input{cursor:text}
+h1,h2,h3{font-weight:800;letter-spacing:-.02em;margin:0}
+:focus-visible{outline:3px solid #2f7bff;outline-offset:2px}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.97)}}
+@keyframes float{50%{transform:translateY(-12px) rotate(8deg)}}
+@keyframes pulse{to{opacity:.45}}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header{display:flex;align-items:center;gap:12px;padding:16px 0 6px}
+.logo{font-size:22px;font-weight:800}.logo span{color:var(--accent)}
+.burger{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-content:center;gap:4px;padding:0;box-shadow:var(--sh)}
+.burger span{display:block;width:18px;height:2px;border-radius:2px;background:var(--fg);transition:width .2s}.burger:hover span:nth-child(2){width:11px}
+.hero{position:relative;overflow:hidden;margin:12px 0 16px;padding:26px 22px;border-radius:24px;color:#fff;background:linear-gradient(135deg,#3b3fd1,#8a3ffc 55%,#d6336c);animation:rise .6s cubic-bezier(.2,.8,.2,1) backwards}
+.hero i{position:absolute;border-radius:50%;background:rgba(255,255,255,.14);animation:float 7s ease-in-out infinite}
+.hero i:nth-child(1){width:170px;height:170px;right:-40px;top:-50px}.hero i:nth-child(2){width:80px;height:80px;right:90px;bottom:-20px;animation-delay:-2s}
+.hero>:not(i){position:relative}.hero h1{font-size:clamp(26px,5vw,40px);line-height:1.1;margin-bottom:6px}.hero p{margin:0 0 16px;max-width:460px;opacity:.92}
+.sb{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sb input{flex:1 1 220px;min-width:0;border:0;border-radius:14px;padding:12px 16px;background:#fff;color:#1c2140}
+.src{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;border-radius:99px;padding:9px 14px;font-weight:600;font-size:13px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:8px 16px;font-weight:600;font-size:14px;transition:transform .15s}
+.chip:hover{transform:translateY(-2px)}.chip[aria-pressed=true]{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.note{font-size:12.5px;color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-flow:dense;gap:14px;padding:8px 0 18px}
+.mc{display:flex;flex-direction:column;height:100%;padding:0;overflow:hidden;text-align:left;border:1px solid var(--line);border-radius:24px;background:var(--card);box-shadow:var(--sh);animation:rise .55s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i)*45ms);transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.mc:hover{transform:translateY(-4px)}.mc:active{transform:scale(.98)}
+.art{flex:1;position:relative;overflow:hidden;aspect-ratio:2/3;display:grid;place-items:center;background:linear-gradient(160deg,hsl(var(--h,230) 85% 84%),hsl(calc(var(--h,230) + 30) 90% 93%))}
+.big .art{aspect-ratio:auto}.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.art em{font-style:normal;font-weight:800;font-size:72px;color:rgba(28,33,64,.5);animation:float 5s ease-in-out infinite}
+.art b{position:absolute;border-radius:50%;background:rgba(255,255,255,.6);animation:float 5s ease-in-out infinite}
+.art b:nth-child(1){width:46%;aspect-ratio:1;right:-10%;top:-8%}.art b:nth-child(2){width:24%;aspect-ratio:1;left:10%;bottom:12%;animation-delay:-2s}
+.mi{display:block;padding:10px 14px 13px}.mi b{display:block;font-size:14px;line-height:1.3}.mi small{color:var(--muted);font-size:12.5px}
+.sc{float:right;font-weight:700;font-size:12.5px;color:var(--star)}
+.sk{aspect-ratio:2/3.3;border-radius:24px;background:var(--line);animation:pulse 1.1s ease-in-out infinite alternate}
+.msg{grid-column:1/-1;text-align:center;padding:40px 16px;color:var(--muted)}.msg .btn{margin-top:12px}
+.btn{border:0;border-radius:12px;padding:10px 18px;background:var(--accent);color:var(--on);font-weight:700;transition:transform .15s,filter .15s}
+.btn:hover{filter:brightness(1.07);transform:translateY(-1px)}.btn:active{transform:scale(.97)}.btn.alt{background:var(--card);color:var(--fg);border:1px solid var(--line)}
+.more{display:block;margin:4px auto 10px}
+footer{padding:6px 0 34px;text-align:center}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(15,18,38,.55);z-index:30}.modal.show{display:flex}
+.sheet{position:relative;display:grid;grid-template-columns:minmax(0,220px) 1fr;gap:22px;width:min(760px,100%);max-height:calc(100dvh - 32px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--sh);animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+.sheet .art{flex:none;aspect-ratio:2/3;border-radius:16px;align-self:start}
+.sheet h2{font-size:24px;margin-bottom:6px;padding-right:34px}.sheet h3{font-size:14px;margin-bottom:4px}.meta{color:var(--muted);font-size:14px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}.tag{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:4px 12px;font-size:13px;font-weight:600}
+.sheet p{white-space:pre-line;margin:0}
+.x{width:36px;height:36px;border:1px solid var(--line);background:var(--card);border-radius:10px;font-size:20px;line-height:1;padding:0}.sheet .x{position:absolute;right:14px;top:12px}
+.scrim{position:fixed;inset:0;background:rgba(15,18,38,.5);opacity:0;pointer-events:none;transition:opacity .25s;z-index:20}.scrim.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(340px,88vw);background:var(--card);border-right:1px solid var(--line);box-shadow:var(--sh);z-index:21;overflow:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 16px 28px;transform:translateX(-102%);visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s .3s;outline:0}
+.drawer.open{transform:none;visibility:visible;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.dh{display:flex;align-items:center;justify-content:space-between;font-size:18px}.dsec{font-size:12px;font-weight:700;color:var(--muted);margin:18px 4px 8px}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:10px 12px;margin-bottom:8px}.opt b{display:block}.opt small{color:var(--muted)}
+.opt[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.key{display:flex;gap:8px;margin:4px 0 8px}.key input{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:9px 12px;background:var(--bg)}
+.seg{display:flex;background:var(--bg);border-radius:12px;padding:4px;gap:4px}.seg button{flex:1;border:0;background:none;padding:7px;border-radius:9px;font-weight:600;color:var(--muted)}.seg button[aria-pressed=true]{background:var(--card);color:var(--fg);box-shadow:var(--sh)}
+.di{display:flex;align-items:center;width:100%;border:0;background:none;padding:12px 6px;font-weight:600;text-align:left;margin-top:4px}
+.tg{margin-left:auto;width:38px;height:22px;border-radius:99px;background:var(--line);position:relative;transition:background .2s}.tg::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.di[aria-pressed=true] .tg{background:var(--accent)}.di[aria-pressed=true] .tg::after{transform:translateX(16px)}
+.cw{position:relative;display:flex;flex-direction:column}.cw.big{grid-column:span 2;grid-row:span 2}.cw .mc{flex:1}
+.wl{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--fg);font-size:18px;line-height:1;padding:0;display:grid;place-items:center;box-shadow:var(--sh);transition:transform .15s}.wl:hover{transform:scale(1.1)}.wl[aria-pressed=false]{filter:grayscale(1);opacity:.8}.wl[aria-pressed=true]{background:var(--accent);color:var(--on);border-color:var(--accent)}
+header .wlb{margin-left:auto;display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:14px}.wlb .n{background:var(--accent);color:var(--on);border-radius:99px;min-width:22px;padding:0 7px;font-size:12px;line-height:22px;text-align:center}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+@media (max-width:760px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:560px){.grid{grid-template-columns:1fr 1fr}.cw.big{grid-row:auto}.big .art{aspect-ratio:16/10}.sheet{grid-template-columns:1fr}.sheet .art{aspect-ratio:16/10;max-height:200px}}
+:root[data-calm] *,:root[data-calm] *::before,:root[data-calm] *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<div class="scrim" id="scrim"></div><aside class="drawer" id="drawer" aria-label="Settings" aria-hidden="true" tabindex="-1"></aside>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="sheet" id="sheet"></div></div>
+<div class="wrap">
+<header><button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button><div class="logo">Toonreel <span>Club</span></div><button class="btn alt wlb" id="wlb" type="button"></button></header>
+<main>
+<section class="hero" id="hero"><i></i><i></i><h1>Animated movie catalogue</h1><p>Browse by genre, then tap any movie to read its summary.</p>
+<div class="sb"><input id="q" type="search" placeholder="Search movies" aria-label="Search movies" autocomplete="off"><button class="src" id="srcb" type="button" hidden></button></div></section>
+<div class="chips" id="chips" role="group" aria-label="Genres"></div>
+<p class="note" id="count" role="status"></p>
+<div class="grid" id="grid"></div>
+<button class="btn alt more" id="more" hidden>Load more</button>
+<button class="btn alt more" id="all" hidden>Load all</button>
+</main>
+<footer><p class="note">Movie data comes from OMDb.</p></footer>
+</div>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var GEN=[["Action",1,28],["Adventure",2,12],["Comedy",4,35],["Drama",8,18],["Fantasy",10,14],["Mystery",7,9648],["Romance",22,10749],["Sci-Fi",24,878]],TG={16:"Animation",10751:"Family"};
+GEN.forEach(function(g){TG[g[2]]=g[0]});
+function gid(n,i){var g=GEN.filter(function(x){return x[0]===n})[0];return g&&g[i]}
+var L=[["Spirited Away",2001,"Studio Ghibli","Adventure,Fantasy","A ten-year-old girl stumbles into a hidden world of spirits and takes a job at a bathhouse to free her parents and find the way home."],
+["My Neighbor Totoro",1988,"Studio Ghibli","Fantasy,Adventure","Two sisters move to the countryside to be near their ailing mother and befriend the gentle, mysterious spirits of the nearby forest."],
+["Your Name",2016,"CoMix Wave Films","Romance,Fantasy,Drama","Two teenagers who have never met start swapping bodies in their dreams, then race against time to find each other."],
+["Princess Mononoke",1997,"Studio Ghibli","Action,Adventure,Fantasy","A young warrior cursed by a dying boar god travels west and is caught between the spirits of a forest and an iron-making town."],
+["Howl's Moving Castle",2004,"Studio Ghibli","Fantasy,Romance,Adventure","A girl turned into an old woman by a curse finds shelter in a wizard's walking castle and slowly uncovers its secrets."],
+["Kiki's Delivery Service",1989,"Studio Ghibli","Fantasy,Adventure","A young witch moves to a seaside town to start her own flying delivery business and learns to trust herself."],
+["Weathering with You",2019,"CoMix Wave Films","Romance,Fantasy,Drama","A runaway teenager meets a girl who can briefly clear the sky in a Tokyo where the rain never stops."],
+["Kung Fu Panda",2008,"DreamWorks","Action,Comedy,Adventure","A noodle-shop dreamer is unexpectedly chosen as the Dragon Warrior and must learn to fight to protect his valley."],
+["Shrek",2001,"DreamWorks","Comedy,Adventure,Fantasy","A grumpy ogre agrees to rescue a princess so he can have his swamp back, and finds friendship along the way."],
+["Despicable Me",2010,"Illumination","Comedy,Adventure","A supervillain plans the greatest heist in history until three orphan girls change his mind about family."],
+["Madagascar",2005,"DreamWorks","Comedy,Adventure","Pampered zoo animals from New York end up stranded on a wild island and discover what the real world is like."],
+["Toy Story",1995,"Pixar","Adventure,Comedy","A cowboy doll's place in a boy's room is threatened by a new space-ranger toy, until the two must work together to get home."],
+["Finding Nemo",2003,"Pixar","Adventure,Comedy","An anxious clownfish crosses the ocean to find his missing son, helped by a cheerful but forgetful friend."],
+["The Lion King",1994,"Disney","Drama,Adventure","A young lion prince runs away after a family tragedy, then must return to take his rightful place."],
+["Frozen",2013,"Disney","Fantasy,Adventure,Comedy","When a princess with icy powers accidentally traps her kingdom in winter, her sister sets out to bring her back."],
+["Coco",2017,"Pixar","Fantasy,Adventure,Drama","A boy who dreams of becoming a musician enters the Land of the Dead and uncovers the story behind his family's ban on music."],
+["WALL-E",2008,"Pixar","Sci-Fi,Adventure,Romance","A lonely robot left to clean up an abandoned Earth follows a visiting probe into space and ends up shaping humanity's future."],
+["Coraline",2009,"Laika","Fantasy,Mystery","A curious girl finds a hidden door to a mirror world where everything seems better, until its owner reveals her real plans."]];
+var LOCAL=L.map(function(a,i){return{id:"l"+i,title:a[0],year:a[1],studio:a[2],genres:a[3].split(","),summary:a[4],img:"",score:""}});
+function jget(u,h){return fetch(u,{headers:h||{}}).then(function(r){if(!r.ok){var e=new Error("HTTP "+r.status);e.status=r.status;throw e}return r.json()})}
+function jmap(a){var im=a.images&&a.images.jpg||{},f=a.aired&&a.aired.prop&&a.aired.prop.from;return{id:"j"+a.mal_id,title:a.title_english||a.title,year:a.year||(f&&f.year)||"",studio:a.studios&&a.studios[0]?a.studios[0].name:"",score:a.score||"",genres:(a.genres||[]).map(function(g){return g.name}),summary:a.synopsis||"No summary available.",img:im.large_image_url||im.image_url||""}}
+function tmap(m){return{id:"t"+m.id,title:m.title,year:(m.release_date||"").slice(0,4),studio:"",score:m.vote_average||"",genres:(m.genre_ids||[]).map(function(i){return TG[i]}).filter(Boolean),summary:m.overview||"No summary available.",img:m.poster_path?"https://image.tmdb.org/t/p/w342"+m.poster_path:""}}
+var CONFIG={src:"omdb",key:"",okey:"6f35dc92"}; /* Paste your OMDb key between the quotes after okey: */
+var PR={src:"local",mode:"auto",calm:false,key:"",okey:"6f35dc92"};try{Object.assign(PR,JSON.parse(localStorage.getItem("tc_prefs")||"{}"))}catch(e){}PR.src=CONFIG.src;PR.key=CONFIG.key;PR.okey=CONFIG.okey;
+var PROV={
+ local:{n:"Built-in list",d:"18 hand-picked movies. Works offline.",load:function(q,g){var s=q.toLowerCase();return Promise.resolve({items:LOCAL.filter(function(m){return(!g||m.genres.indexOf(g)>-1)&&(!s||(m.title+" "+m.studio).toLowerCase().indexOf(s)>-1)}),more:false})}},
+ jikan:{n:"Jikan (anime movies)",d:"Free, no key needed. Data from MyAnimeList.",load:function(q,g,p){var gi=g&&gid(g,1);return jget("https://api.jikan.moe/v4/anime?sfw=true&type=movie&order_by=popularity&sort=asc&limit=24&page="+p+(gi?"&genres="+gi:"")+(q?"&q="+encodeURIComponent(q):"")).then(function(d){return{items:(d.data||[]).map(jmap),more:!!(d.pagination&&d.pagination.has_next_page)}})}},
+ tmdb:{n:"TMDB (animated films)",d:"Free key needed. Western and world animation.",load:function(q,g,p){var k=(PR.key||"").trim();if(!k)return Promise.reject({nokey:1});var gi=g&&gid(g,2),b=k.length>40;
+  var u="https://api.themoviedb.org/3/"+(q?"search/movie?query="+encodeURIComponent(q):"discover/movie?sort_by=popularity.desc&with_genres="+(gi?"16,"+gi:16))+"&include_adult=false&language=en-US&page="+p+(b?"":"&api_key="+encodeURIComponent(k));
+  return jget(u,b?{Authorization:"Bearer "+k}:{}).then(function(d){var r=d.results||[];if(q)r=r.filter(function(m){var i=m.genre_ids||[];return i.indexOf(16)>-1&&(!gi||i.indexOf(gi)>-1)});return{items:r.map(tmap),more:p<(d.total_pages||1)}})}}};
+var XS="Snow White and the Seven Dwarfs|1937;Pinocchio|1940;Fantasia|1940;Dumbo|1941;Bambi|1942;Cinderella|1950;Alice in Wonderland|1951;Peter Pan|1953;Lady and the Tramp|1955;Sleeping Beauty|1959;One Hundred and One Dalmatians|1961;The Sword in the Stone|1963;The Jungle Book|1967;The Aristocats|1970;Robin Hood|1973;The Rescuers|1977;The Fox and the Hound|1981;The Black Cauldron|1985;The Great Mouse Detective|1986;Oliver & Company|1988;The Little Mermaid|1989;Beauty and the Beast|1991;Pocahontas|1995;The Hunchback of Notre Dame|1996;Hercules|1997;Mulan|1998;Tarzan|1999;The Emperor's New Groove|2000;Atlantis: The Lost Empire|2001;Lilo & Stitch|2002;Treasure Planet|2002;Brother Bear|2003;Chicken Little|2005;Meet the Robinsons|2007;Bolt|2008;The Princess and the Frog|2009;Wreck-It Ralph|2012;Raya and the Last Dragon|2021;Strange World|2022;Wish|2023;Moana 2|2024;A Bug's Life|1998;Toy Story 2|1999;Toy Story 3|2010;Cars|2006;Cars 2|2011;Brave|2012;Monsters University|2013;The Good Dinosaur|2015;Finding Dory|2016;Cars 3|2017;Incredibles 2|2018;Toy Story 4|2019;Onward|2020;Luca|2021;Turning Red|2022;Lightyear|2022;Elemental|2023;Inside Out 2|2024;Antz|1998;The Prince of Egypt|1998;Chicken Run|2000;The Road to El Dorado|2000;Spirit: Stallion of the Cimarron|2002;Sinbad: Legend of the Seven Seas|2003;Shrek 2|2004;Shark Tale|2004;Madagascar: Escape 2 Africa|2008;Madagascar 3: Europe's Most Wanted|2012;Over the Hedge|2006;Flushed Away|2006;Bee Movie|2007;Shrek the Third|2007;Monsters vs. Aliens|2009;Megamind|2010;Shrek Forever After|2010;Kung Fu Panda 2|2011;Kung Fu Panda 3|2016;Kung Fu Panda 4|2024;Puss in Boots|2011;Rise of the Guardians|2012;The Croods|2013;Turbo|2013;Mr. Peabody & Sherman|2014;How to Train Your Dragon 2|2014;How to Train Your Dragon: The Hidden World|2019;Home|2015;Trolls|2016;Trolls World Tour|2020;The Boss Baby|2017;Captain Underpants: The First Epic Movie|2017;Abominable|2019;The Croods: A New Age|2020;The Bad Guys|2022;Puss in Boots: The Last Wish|2022;The Wild Robot|2024;Despicable Me 2|2013;Despicable Me 3|2017;Despicable Me 4|2024;Minions|2015;Minions: The Rise of Gru|2022;The Secret Life of Pets|2016;The Secret Life of Pets 2|2019;Sing|2016;Sing 2|2021;The Lorax|2012;The Grinch|2018;The Super Mario Bros. Movie|2023;Migration|2023;Robots|2005;Ice Age: The Meltdown|2006;Ice Age: Dawn of the Dinosaurs|2009;Horton Hears a Who!|2008;Rio|2011;Rio 2|2014;Epic|2013;The Peanuts Movie|2015;Ferdinand|2017;Spies in Disguise|2019;Cloudy with a Chance of Meatballs|2009;Hotel Transylvania|2012;Hotel Transylvania 2|2015;Open Season|2006;Surf's Up|2007;The Mitchells vs. the Machines|2021;Spider-Man: Across the Spider-Verse|2023;Vivo|2021;Arthur Christmas|2011;The Angry Birds Movie|2016;Happy Feet|2006;Planes|2013;Smallfoot|2018;The Lego Movie|2014;The Lego Batman Movie|2017;Storks|2016;Gnomeo & Juliet|2011;Cloudy with a Chance of Meatballs 2|2013;Monster House|2006;The Polar Express|2004;Kubo and the Two Strings|2016;ParaNorman|2012;The Boxtrolls|2014;Missing Link|2019;Chicken Run: Dawn of the Nugget|2023;Wallace & Gromit: The Curse of the Were-Rabbit|2005;Shaun the Sheep Movie|2015;Early Man|2018;The Nightmare Before Christmas|1993;James and the Giant Peach|1996;Corpse Bride|2005;Fantastic Mr. Fox|2009;Isle of Dogs|2018;Anomalisa|2015;Persepolis|2007;Waltz with Bashir|2008;Loving Vincent|2017;The Secret of Kells|2009;Song of the Sea|2014;Wolfwalkers|2020;The Breadwinner|2017;Klaus|2019;The Triplets of Belleville|2003;Ernest & Celestine|2012;The Tale of the Princess Kaguya|2013;A Cat in Paris|2010;Rango|2011;Mary and Max|2009;The Illusionist|2010;My Life as a Zucchini|2016;The Little Prince|2015;Guillermo del Toro's Pinocchio|2022;Marcel the Shell with Shoes On|2021;Nimona|2023;Robot Dreams|2023;Flow|2024;The Land Before Time|1988;An American Tail|1986;All Dogs Go to Heaven|1989;Balto|1995;Anastasia|1997;Cats Don't Dance|1997;The Swan Princess|1994;Quest for Camelot|1998;Titan A.E.|2000;Yellow Submarine|1968;Watership Down|1978;Fantastic Planet|1973;Heavy Metal|1981;Sita Sings the Blues|2008;Castle in the Sky|1986;Nausicaä of the Valley of the Wind|1984;Grave of the Fireflies|1988;Only Yesterday|1991;Porco Rosso|1992;Pom Poko|1994;Whisper of the Heart|1995;The Cat Returns|2002;Tales from Earthsea|2006;Arrietty|2010;From Up on Poppy Hill|2011;The Wind Rises|2013;When Marnie Was There|2014;The Red Turtle|2016;The Boy and the Heron|2023;Ghost in the Shell|1995;Perfect Blue|1997;Millennium Actress|2001;Tokyo Godfathers|2003;Paprika|2006;The Girl Who Leapt Through Time|2006;Summer Wars|2009;Wolf Children|2012;The Boy and the Beast|2015;Mirai|2018;A Silent Voice|2016;5 Centimeters per Second|2007;The Garden of Words|2013;Suzume|2022;Belle|2021;Metropolis|2001;Redline|2009;One Piece Film: Red|2022;Jujutsu Kaisen 0|2021;Violet Evergarden: The Movie|2020;I Want to Eat Your Pancreas|2018;Josee, the Tiger and the Fish|2020;Children Who Chase Lost Voices|2011;Vampire Hunter D: Bloodlust|2000;Ninja Scroll|1993;Appleseed|2004;Cowboy Bebop: The Movie|2001;Fullmetal Alchemist: The Conqueror of Shamballa|2005;Frozen II|2019;Ralph Breaks the Internet|2018;The Rescuers Down Under|1990;Winnie the Pooh|2011;Fantasia 2000|1999;Trolls Band Together|2023;Ruby Gillman, Teenage Kraken|2023;Ice Age: Continental Drift|2012;Ice Age: Collision Course|2016;Hotel Transylvania 3: Summer Vacation|2018;The Emoji Movie|2017;Sherlock Gnomes|2018;The Addams Family|2019;The Willoughbys|2020;Over the Moon|2020;Spirit Untamed|2021;Ron's Gone Wrong|2021;Leo|2023";
+var OS=L.map(function(a){return[a[0],a[1]]}).concat([["Akira",1988],["Ratatouille",2007],["Moana",2016],["Zootopia",2016],["Up",2009],["Inside Out",2015],["The Incredibles",2004],["Monsters, Inc.",2001],["How to Train Your Dragon",2010],["Ice Age",2002],["Spider-Man: Into the Spider-Verse",2018],["Encanto",2021],["Soul",2020],["Ponyo",2008],["Tangled",2010],["Aladdin",1992],["The Iron Giant",1999],["Big Hero 6",2014]]).concat(XS.split(";").map(function(r){r=r.split("|");return[r[0],+r[1]]})),OC={};try{OC=JSON.parse(localStorage.getItem("tc_oc")||"{}")}catch(e){}
+var oct;function ocSave(){clearTimeout(oct);oct=setTimeout(function(){try{localStorage.setItem("tc_oc",JSON.stringify(OC))}catch(e){}},600)}
+function oget(q){var k=(PR.okey||"").trim();return fetch("https://www.omdbapi.com/?apikey="+encodeURIComponent(k)+"&"+q).then(function(r){return r.json().catch(function(){return{Response:"False",Error:"HTTP "+r.status}})}).then(function(d){if(d.Response==="False"){var e=new Error(d.Error);e.omdb=d.Error||"";throw e}return d})}
+function na(v){return v&&v!=="N/A"?v:""}
+function omap(d){return{id:"o"+d.imdbID,title:d.Title,year:na(d.Year),studio:na(d.Director)?"Dir. "+d.Director.split(",")[0]:"",score:na(d.imdbRating),genres:na(d.Genre)?d.Genre.split(", "):[],summary:na(d.Plot)||"No summary available.",img:na(d.Poster).replace(/^http:/,"https:")}}
+function odet(q){if(q in OC)return Promise.resolve(OC[q]);return oget(q+"&type=movie&plot=full").then(function(d){OC[q]=omap(d);ocSave();return OC[q]},function(e){if(e.omdb==="Movie not found!"){OC[q]=null;ocSave();return null}throw e})}
+PROV.omdb={n:"OMDb (posters and plots)",d:"Free key needed. About 280 animated movies with posters and plots.",test:function(){return oget("t=Shrek")},
+ load:function(q,g,p){if(!(PR.okey||"").trim())return Promise.reject({nokey:1});var keep=function(m){return m&&(!g||m.genres.indexOf(g)>-1)};
+  if(q)return oget("s="+encodeURIComponent(q)+"&type=movie&page="+p).catch(function(e){if(e.omdb==="Movie not found!"||e.omdb==="Too many results.")return{Search:[],totalResults:0};throw e}).then(function(d){return Promise.all((d.Search||[]).map(function(x){return odet("i="+x.imdbID)})).then(function(a){return{items:a.filter(function(m){return keep(m)&&m.genres.indexOf("Animation")>-1}),more:p*10<(+d.totalResults||0)}})});
+  return Promise.all(OS.slice((p-1)*24,p*24).map(function(x){return odet("t="+encodeURIComponent(x[0])+"&y="+x[1])})).then(function(a){return{items:a.filter(keep),more:p*24<OS.length}})}};
+PROV.tmdb.test=function(){return PROV.tmdb.load("","",1)};
+if(!PROV[PR.src])PR.src="local";
+function applyPrefs(){var r=document.documentElement;r.dataset.mode=PR.mode;if(PR.calm)r.dataset.calm="1";else delete r.dataset.calm;try{localStorage.setItem("tc_prefs",JSON.stringify(PR))}catch(e){}}
+function errText(e){var n=PR.src==="omdb"?"OMDb":"TMDB",o=e&&e.omdb||"";return e&&e.nokey?n+" needs an API key. Add it to CONFIG at the top of the script.":e&&(e.status===401||e.status===403||/invalid api key/i.test(o))?"The "+n+" key was rejected. Check it in the menu.":e&&(e.status===429||/limit/i.test(o))?"Request limit reached for "+n+". Wait a while and try again.":"Could not load movies. Check your connection and try again."}
+function hue(m){return(m.title.charCodeAt(0)*37+m.title.length*53)%360}
+var S={q:"",g:"",p:1,items:[],more:false,busy:false,err:null,tok:0};
+function wlBtn(m,i){var on=wlIdx(m)>-1;return'<button class="wl" data-w="'+i+'" aria-pressed="'+on+'" aria-label="'+(on?'Remove '+esc(m.title)+' from watchlist':'Add '+esc(m.title)+' to watchlist')+'">'+(on?"\ud83e\udde0":"\ud83e\udde0")+'</button>'}
+function card(m,i){return'<div class="cw'+(i===0&&!S.wl?' big':'')+'"><button class="mc" data-i="'+i+'" style="--i:'+Math.min(i,12)+';--h:'+hue(m)+'"><span class="art">'+(m.img?'<img src="'+esc(m.img)+'" alt="" loading="lazy" onerror="this.remove()">':'<b></b><b></b><em aria-hidden="true">'+esc(m.title.charAt(0))+'</em>')+'</span><span class="mi">'+(m.score?'<span class="sc">\u2605 '+(+m.score).toFixed(1)+'</span>':'')+'<b>'+esc(m.title)+'</b><small>'+[m.year,m.studio].filter(Boolean).map(esc).join(" \u00b7 ")+'</small></span></button>'+wlBtn(m,i)+'</div>'}
+function draw(){var h="",i;$("srcb").textContent="Source: "+PROV[PR.src].n+" \u25BE";
+ if(S.wl)h=WL.length?WL.map(card).join(""):'<div class="msg"><p>Your watchlist is empty. Tap the brain button on any movie to save it here.</p><button class="btn" data-a="back">Browse movies</button></div>';
+ else if(S.busy&&!S.items.length)for(i=0;i<8;i++)h+='<div class="sk" style="--i:'+i+'"></div>';
+ else if(S.err)h='<div class="msg"><p>'+esc(errText(S.err))+'</p>'+(S.err.nokey?'':'<button class="btn" data-a="retry">Try again</button>')+'</div>';
+ else if(!S.items.length)h='<div class="msg">No movies found. '+(S.more?"Tap Load more to keep looking.":"Try another genre or search.")+'</div>';
+ else h=S.items.map(card).join("");
+ $("grid").innerHTML=h;$("count").textContent=S.wl?(WL.length?"Watchlist: "+WL.length+" movie"+(WL.length>1?"s":""):""):S.items.length&&!S.err?(S.g?S.g+": ":"")+S.items.length+" movies":"";
+ $("more").hidden=S.wl||!(S.more||(S.busy&&S.items.length));$("more").disabled=S.busy;$("all").hidden=S.wl||!(S.more&&PR.src==="omdb"&&!S.q&&!S.busy);$("more").textContent=S.busy?"Loading...":"Load more"}
+function load(more){var t=++S.tok;if(more)S.p++;else{S.p=1;S.items=[];S.all=false}S.busy=true;S.err=null;draw();
+ PROV[PR.src].load(S.q,S.g,S.p).then(function(r){if(t!==S.tok)return;S.items=S.items.concat(r.items);S.more=r.more;S.busy=false;draw();if(S.all&&S.more)load(true)}).catch(function(e){if(t!==S.tok)return;S.busy=false;S.err=e;S.more=false;S.all=false;if(more)S.p--;draw()})}
+var WL=[],cur,undoM,undoAt,tt;try{WL=JSON.parse(localStorage.getItem("tc_wl")||"[]");if(!Array.isArray(WL))WL=[]}catch(e){WL=[]}
+function wlSave(){try{localStorage.setItem("tc_wl",JSON.stringify(WL))}catch(e){}}
+function wlIdx(m){for(var i=0;i<WL.length;i++)if(WL[i].id===m.id)return i;return-1}
+function list(){return S.wl?WL:S.items}
+function mbtn(m){var on=wlIdx(m)>-1;return'<button class="btn'+(on?' alt':'')+'" data-a="wl">'+(on?"\ud83e\udde0 Remove from watchlist":"\ud83e\udde0 Add to watchlist")+'</button>'}
+function wlLabel(){$("wlb").innerHTML=S.wl?"\u2190 Catalogue":'\ud83e\udde0 Watchlist <span class="n">'+WL.length+'</span>'}
+function wlSync(){wlLabel();var mb=$("sheet").querySelector("[data-a=wl]");if(mb&&cur){var on=wlIdx(cur)>-1;mb.className="btn"+(on?" alt":"");mb.textContent=on?"\ud83e\udde0 Remove from watchlist":"\ud83e\udde0 Add to watchlist"}
+ if(S.wl){draw();return}
+ [].forEach.call(document.querySelectorAll("#grid .wl"),function(b){var m=S.items[+b.dataset.w];if(!m)return;var on=wlIdx(m)>-1;b.setAttribute("aria-pressed",on);b.setAttribute("aria-label",(on?"Remove ":"Add ")+m.title+(on?" from":" to")+" watchlist");b.textContent=on?"\ud83e\udde0":"\ud83e\udde0"})}
+function wlToggle(m){var i=wlIdx(m);if(i>-1)WL.splice(i,1);else WL.push(m);wlSave();wlSync()}
+function setWl(v){S.wl=v;$("hero").hidden=v;$("chips").hidden=v;wlLabel();draw();window.scrollTo(0,0)}
+$("wlb").onclick=function(){setWl(!S.wl)};
+var last;
+function openM(m){cur=m;last=document.activeElement;var im=m.img?'<img src="'+esc(m.img)+'" alt="" onerror="this.remove()">':'<b></b><em aria-hidden="true">'+esc(m.title.charAt(0))+'</em>';
+ $("sheet").innerHTML='<button class="x" data-a="close" aria-label="Close summary">&times;</button><div class="art" style="--h:'+hue(m)+'">'+im+'</div><div><h2 id="mt">'+esc(m.title)+'</h2><div class="meta">'+[m.year,m.studio,m.score?'\u2605 '+(+m.score).toFixed(1):""].filter(Boolean).map(esc).join(" \u00b7 ")+'</div><div class="tags">'+m.genres.map(function(g){return'<span class="tag">'+esc(g)+'</span>'}).join("")+'</div><h3>Summary</h3><p>'+esc(m.summary)+'</p><div class="acts">'+mbtn(m)+'<button class="btn alt" data-a="close">Cancel</button></div></div>';
+ $("modal").classList.add("show");$("sheet").querySelector(".x").focus()}
+function closeM(){$("modal").classList.remove("show");if(last&&last.focus)last.focus()}
+function drawDrawer(){var tm=PR.src==="tmdb"||PR.src==="omdb",om=PR.src==="omdb",kv=om?PR.okey:PR.key,nm=om?"OMDb":"TMDB";
+ $("drawer").innerHTML='<div class="dh"><b>Settings</b><button class="x" data-m="close" aria-label="Close menu">&times;</button></div>'+'<div class="dsec">Appearance</div><div class="seg">'+["auto","light","dark"].map(function(v){return'<button data-m="mode" data-v="'+v+'" aria-pressed="'+(PR.mode===v)+'">'+v.charAt(0).toUpperCase()+v.slice(1)+'</button>'}).join("")+'</div><button class="di" data-m="calm" aria-pressed="'+!!PR.calm+'">Reduce motion<span class="tg"></span></button>'}
+function drawer(o){var d=$("drawer");if(o)drawDrawer();d.classList.toggle("open",o);$("scrim").classList.toggle("show",o);d.setAttribute("aria-hidden",!o);$("burger").setAttribute("aria-expanded",o);if(o)d.focus();else $("burger").focus()}
+function refocus(q){var e=$("drawer").querySelector(q);if(e)e.focus()}
+$("burger").onclick=function(){drawer(true)};$("srcb").onclick=function(){drawer(true)};$("scrim").onclick=function(){drawer(false)};
+$("drawer").onclick=function(e){var b=e.target.closest("[data-m]");if(!b)return;var m=b.dataset.m;
+ if(m==="close")drawer(false);
+ else if(m==="src"){PR.src=b.dataset.v;applyPrefs();S.tok++;load();if(PR.src==="tmdb"||PR.src==="omdb"){drawDrawer();refocus('[data-v="'+PR.src+'"]')}else drawer(false)}
+ else if(m==="key"){var v=$("key").value.trim(),mm=v.match(/apikey=([^&\s"']+)/i);if(mm)v=mm[1];v=v.replace(/^["'\s]+|["'\s]+$/g,"");$("key").value=v;PR[PR.src==="omdb"?"okey":"key"]=v;applyPrefs();$("ks").textContent="Testing your key...";PROV[PR.src].test().then(function(){drawer(false);load()}).catch(function(x){$("ks").textContent=errText(x)+(PR.src==="omdb"&&x&&x.omdb?" You entered "+v.length+" characters. OMDb keys are usually 8 characters, like ab12c345. If the key is new, activate it with the link in OMDb's email first.":"")})}
+ else if(m==="mode"){PR.mode=b.dataset.v;applyPrefs();drawDrawer();refocus('[data-v="'+PR.mode+'"][data-m="mode"]')}
+ else if(m==="calm"){PR.calm=!PR.calm;applyPrefs();drawDrawer();refocus('[data-m="calm"]')}};
+$("grid").onclick=function(e){var b=e.target.closest("button");if(!b)return;if(b.dataset.w!=null)wlToggle(list()[+b.dataset.w]);else if(b.dataset.i!=null)openM(list()[+b.dataset.i]);else if(b.dataset.a==="back")setWl(false);else if(b.dataset.a==="retry")load();else if(b.dataset.a==="menu")drawer(true)};
+$("more").onclick=function(){load(true)};$("all").onclick=function(){S.all=true;load(true)};
+$("modal").onclick=function(e){if(e.target.closest("[data-a=wl]")){wlToggle(cur);return}if(e.target===$("modal")||e.target.closest("[data-a=close]"))closeM()};
+$("chips").innerHTML=[["All"]].concat(GEN).map(function(g,i){var v=i?g[0]:"";return'<button class="chip" data-g="'+v+'" aria-pressed="'+(S.g===v)+'">'+g[0]+'</button>'}).join("");
+$("chips").onclick=function(e){var b=e.target.closest(".chip");if(!b)return;S.g=b.dataset.g;[].forEach.call($("chips").children,function(c){c.setAttribute("aria-pressed",c.dataset.g===S.g)});load()};
+var tm;$("q").oninput=function(){S.q=this.value.trim();clearTimeout(tm);tm=setTimeout(load,PR.src==="local"?0:400)};
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){if($("modal").classList.contains("show"))closeM();else if($("drawer").classList.contains("open"))drawer(false)}});
+wlLabel();applyPrefs();load();
+})();
+</script>
+</body></html>
